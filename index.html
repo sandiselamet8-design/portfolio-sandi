@@ -969,8 +969,8 @@
         <p class="text-slate-500 text-sm">© 2026 Sandi Selamet. All Rights Reserved.</p>
     </footer>
 
-    <div id="cvModal" class="custom-modal hidden fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-6 bg-slate-900/90" onclick="closeCV()">
-        <button class="absolute top-4 right-4 text-white hover:text-red-500 bg-slate-800 rounded-full w-10 h-10 flex items-center justify-center text-xl transition z-50">&times;</button>
+   <div id="cvModal" class="custom-modal hidden fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-6 bg-slate-900/90" onclick="closeCV()">
+        <button class="absolute top-4 right-4 text-white hover:text-red-500 bg-slate-800 rounded-full w-10 h-10 flex items-center justify-center text-xl transition z-50" onclick="closeCV()">&times;</button>
         <div class="modal-content w-full max-w-4xl h-[85vh] bg-white rounded-2xl overflow-hidden relative shadow-2xl" onclick="event.stopPropagation()">
             <iframe 
                 src="assets/doc/CV_Sandi_Selamet.pdf#view=FitH" 
@@ -993,172 +993,107 @@
 
         function toggleLanguage() {
             currentLang = currentLang === 'id' ? 'en' : 'id';
+            if(langLabel) langLabel.innerText = currentLang === 'id' ? 'EN' : 'ID';
+            if(btnLangMob) btnLangMob.innerText = currentLang === 'id' ? 'EN' : 'ID';
             
-            langLabel.innerText = currentLang === 'id' ? 'EN' : 'ID';
-            btnLangMob.innerText = currentLang === 'id' ? 'EN' : 'ID';
-            
-            document.querySelectorAll('.lang-id').forEach(el => {
-                if(currentLang === 'en') el.classList.add('lang-hidden');
-                else el.classList.remove('lang-hidden');
-            });
-            document.querySelectorAll('.lang-en').forEach(el => {
-                if(currentLang === 'id') el.classList.add('lang-hidden');
-                else el.classList.remove('lang-hidden');
-            });
+            document.querySelectorAll('.lang-id').forEach(el => el.classList.toggle('lang-hidden', currentLang === 'en'));
+            document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('lang-hidden', currentLang === 'id'));
         }
-        btnLangDesk.addEventListener('click', toggleLanguage);
-        btnLangMob.addEventListener('click', toggleLanguage);
-<script>
+        if(btnLangDesk) btnLangDesk.addEventListener('click', toggleLanguage);
+        if(btnLangMob) btnLangMob.addEventListener('click', toggleLanguage);
+
         // 2. LOGIKA LIHAT CV (KONSISTEN DI SEMUA PERANGKAT)
-        // Logika Buka CV
         function openCV() {
-            const cvModal = document.getElementById('cvModal');
-            if (cvModal) {
-                cvModal.classList.remove('hidden');
-                // Gunakan timeout kecil agar transisi terlihat mulus
-                setTimeout(() => cvModal.classList.add('visible'), 10);
+            const modal = document.getElementById('cvModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.add('visible'), 10);
                 document.body.style.overflow = 'hidden';
             }
         }
 
-       // Logika Tutup CV
         function closeCV() {
-            const cvModal = document.getElementById('cvModal');
-            if (cvModal) {
-                cvModal.classList.remove('visible');
+            const modal = document.getElementById('cvModal');
+            if (modal) {
+                modal.classList.remove('visible');
                 setTimeout(() => {
-                    cvModal.classList.add('hidden');
+                    modal.classList.add('hidden');
                     document.body.style.overflow = 'auto';
                 }, 300);
             }
         }
-    </script>
 
-        // 3. LOGIKA KIRIM PESAN AJAX (TANPA PINDAH WEB)
+        // 3. LOGIKA KIRIM PESAN AJAX
         const form = document.getElementById("contact-form");
         const formStatus = document.getElementById("form-status");
         const submitBtn = document.getElementById("submit-btn");
 
-        form.addEventListener("submit", async function(event) {
-            event.preventDefault(); 
-            
-            formStatus.classList.add("hidden");
-            const originalBtnHTML = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = currentLang === 'id' ? "Mengirim... ⏳" : "Sending... ⏳";
-            submitBtn.disabled = true;
-            submitBtn.classList.add("opacity-70", "cursor-not-allowed");
+        if (form) {
+            form.addEventListener("submit", async function(event) {
+                event.preventDefault(); 
+                formStatus.classList.add("hidden");
+                const originalBtnHTML = submitBtn.innerHTML;
+                submitBtn.innerHTML = currentLang === 'id' ? "Mengirim... ⏳" : "Sending... ⏳";
+                submitBtn.disabled = true;
 
-            const data = new FormData(event.target);
-            
-            try {
-                const response = await fetch(event.target.action, {
-                    method: form.method,
-                    body: data,
-                    headers: { 'Accept': 'application/json' }
-                });
-                
-                formStatus.classList.remove("hidden");
-                if (response.ok) {
-                    formStatus.innerHTML = currentLang === 'id' ? "✅ Pesan Anda berhasil terkirim!" : "✅ Message sent successfully!";
-                    formStatus.className = "text-center font-bold mt-4 mb-2 p-3 rounded-lg bg-green-500/20 text-green-400 border border-green-500/50 block";
-                    form.reset();
-                } else {
-                    formStatus.innerHTML = currentLang === 'id' ? "❌ Gagal mengirim pesan." : "❌ Failed to send message.";
-                    formStatus.className = "text-center font-bold mt-4 mb-2 p-3 rounded-lg bg-red-500/20 text-red-400 border border-red-500/50 block";
+                const data = new FormData(event.target);
+                try {
+                    const response = await fetch(event.target.action, {
+                        method: form.method,
+                        body: data,
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    formStatus.classList.remove("hidden");
+                    if (response.ok) {
+                        formStatus.innerHTML = currentLang === 'id' ? "✅ Pesan terkirim!" : "✅ Message sent!";
+                        formStatus.className = "text-center font-bold mt-4 p-3 rounded-lg bg-green-500/20 text-green-400 border border-green-500/50 block";
+                        form.reset();
+                    } else {
+                        formStatus.innerHTML = "❌ Gagal mengirim.";
+                        formStatus.className = "text-center font-bold mt-4 p-3 rounded-lg bg-red-500/20 text-red-400 border border-red-500/50 block";
+                    }
+                } catch (error) {
+                    formStatus.classList.remove("hidden");
+                    formStatus.innerHTML = "❌ Koneksi terputus.";
                 }
-            } catch (error) {
-                formStatus.classList.remove("hidden");
-                formStatus.innerHTML = currentLang === 'id' ? "❌ Koneksi terputus. Coba lagi." : "❌ Connection lost. Try again.";
-                formStatus.className = "text-center font-bold mt-4 mb-2 p-3 rounded-lg bg-red-500/20 text-red-400 border border-red-500/50 block";
-            }
-            
-            submitBtn.innerHTML = originalBtnHTML;
-            submitBtn.disabled = false;
-            submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
-            
-            setTimeout(() => formStatus.classList.add("hidden"), 5000);
-        });
+                submitBtn.innerHTML = originalBtnHTML;
+                submitBtn.disabled = false;
+                setTimeout(() => formStatus.classList.add("hidden"), 5000);
+            });
+        }
 
-        // 4. ANIMASI SCROLL (Observer)
+        // 4. ANIMASI SCROLL & DARK MODE (DISERTAI OBSERVER)
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    if (entry.target.id === 'keahlian') {
-                        entry.target.querySelectorAll('[data-width]').forEach(bar => {
-                            bar.style.width = bar.getAttribute('data-width');
-                        });
-                    }
-                } else {
-                    entry.target.classList.remove('visible');
-                    if (entry.target.id === 'keahlian') {
-                        entry.target.querySelectorAll('[data-width]').forEach(bar => bar.style.width = '0');
-                    }
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.15 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-        document.querySelectorAll('.fade-up, #keahlian').forEach(el => observer.observe(el));
-
-        // 5. LOGIKA DARK MODE
+        // Dark Mode Logic
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
-        
-        const darkIcon = document.getElementById('theme-toggle-dark-icon');
-        const lightIcon = document.getElementById('theme-toggle-light-icon');
-        const darkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
-        const lightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
-
-        function updateIcons(isDark) {
-            if (isDark) {
-                lightIcon.classList.remove('hidden'); darkIcon.classList.add('hidden');
-                lightIconMobile.classList.remove('hidden'); darkIconMobile.classList.add('hidden');
-            } else {
-                lightIcon.classList.add('hidden'); darkIcon.classList.remove('hidden');
-                lightIconMobile.classList.add('hidden'); darkIconMobile.classList.remove('hidden');
-            }
-        }
-
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark'); updateIcons(true);
-        } else {
-            document.documentElement.classList.remove('dark'); updateIcons(false);
-        }
-
         function toggleTheme() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light'); updateIcons(false);
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark'); updateIcons(true);
-            }
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
         }
+        if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+        if(themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', toggleTheme);
 
-        themeToggleBtn.addEventListener('click', toggleTheme);
-        themeToggleMobileBtn.addEventListener('click', toggleTheme);
-
-        // 6. MENU HP & SCROLL NAVBAR
+        // 5. MENU MOBILE & GALERI
         const btnMobile = document.getElementById('btn-mobile');
         const menuMobile = document.getElementById('menu-mobile');
-        const navbarElement = document.getElementById('navbar');
+        if(btnMobile && menuMobile) {
+            btnMobile.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+            menuMobile.querySelectorAll('a').forEach(link => link.addEventListener('click', () => menuMobile.classList.add('hidden')));
+        }
 
-        btnMobile.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
-        menuMobile.querySelectorAll('a').forEach(link => link.addEventListener('click', () => menuMobile.classList.add('hidden')));
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 10) navbarElement.classList.add('shadow-md');
-            else navbarElement.classList.remove('shadow-md');
-        });
-
-        // 7. MODAL GALERI
         function openModal(imageSrc) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
             modalImg.src = imageSrc;
             modal.classList.remove('hidden');
-            requestAnimationFrame(() => modal.classList.add('visible'));
+            setTimeout(() => modal.classList.add('visible'), 10);
             document.body.style.overflow = 'hidden';
         }
 
@@ -1167,16 +1102,16 @@
             modal.classList.remove('visible');
             setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
         }
-        
-        document.addEventListener('keydown', function(e) {
+
+        document.addEventListener('keydown', (e) => {
             if (e.key === "Escape") {
-                if (document.getElementById('imageModal').classList.contains('visible')) closeModal();
-                if (document.getElementById('cvModal').classList.contains('visible')) closeCV();
+                closeModal();
+                closeCV();
             }
         });
     </script>
 
-    <a href="https://wa.me/6285219849285?text=Halo%20Sandi,%20saya%20melihat%20portofolio%20Anda%20dan%20tertarik%20untuk%20berdiskusi%20lebih%20lanjut." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-[#25D366] text-white p-4 rounded-full shadow-[0_4px_15px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_6px_20px_rgba(37,211,102,0.6)] transition-all duration-300 z-[100] group flex items-center justify-center animate-bounce" style="animation-duration: 2.5s;">
+    <a href="https://wa.me/6285219849285?text=Halo%20Sandi,%20saya%20melihat%20portofolio%20Anda." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-all duration-300 z-[100] animate-bounce">
         <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
         <span class="absolute right-16 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm font-bold px-3 py-1.5 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-slate-100 dark:border-slate-700">Chat via WA</span>
     </a>
