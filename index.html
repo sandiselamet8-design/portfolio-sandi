@@ -1008,17 +1008,20 @@
         }
         btnLangDesk.addEventListener('click', toggleLanguage);
         btnLangMob.addEventListener('click', toggleLanguage);
-
+<script>
         // 2. LOGIKA LIHAT CV (KONSISTEN DI SEMUA PERANGKAT)
+        // Logika Buka CV
         function openCV() {
             const cvModal = document.getElementById('cvModal');
             if (cvModal) {
                 cvModal.classList.remove('hidden');
-                requestAnimationFrame(() => cvModal.classList.add('visible'));
+                // Gunakan timeout kecil agar transisi terlihat mulus
+                setTimeout(() => cvModal.classList.add('visible'), 10);
                 document.body.style.overflow = 'hidden';
             }
         }
 
+       // Logika Tutup CV
         function closeCV() {
             const cvModal = document.getElementById('cvModal');
             if (cvModal) {
@@ -1029,6 +1032,7 @@
                 }, 300);
             }
         }
+    </script>
 
         // 3. LOGIKA KIRIM PESAN AJAX (TANPA PINDAH WEB)
         const form = document.getElementById("contact-form");
