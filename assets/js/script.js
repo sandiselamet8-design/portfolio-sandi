@@ -1,36 +1,50 @@
 // =========================================
-// 1. TOGGLE MENU MOBILE (HP)
+// 1. TOGGLE MENU MOBILE (HP) YANG LEBIH SMART
 // =========================================
 const btnMobile = document.getElementById('btn-mobile');
 const menuMobile = document.getElementById('menu-mobile');
 
-// Ketika tombol hamburger diklik, munculkan/sembunyikan menu
 if (btnMobile && menuMobile) {
-    btnMobile.addEventListener('click', () => {
+    // Memunculkan/menyembunyikan menu saat tombol diklik
+    btnMobile.addEventListener('click', (event) => {
+        event.stopPropagation(); // Mencegah bentrok dengan klik layar
         menuMobile.classList.toggle('hidden');
     });
 
-    // Ketika salah satu link di dalam menu HP diklik, tutup menunya otomatis
+    // Menutup menu otomatis jika salah satu link diklik
     const mobileLinks = menuMobile.querySelectorAll('a');
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
             menuMobile.classList.add('hidden');
         });
     });
+
+    // FITUR TAMBAHAN: Menutup menu jika user mengeklik area kosong di luar menu
+    document.addEventListener('click', (event) => {
+        // Jika menu sedang terbuka, dan area yang diklik BUKAN menu atau tombolnya
+        if (!menuMobile.classList.contains('hidden') && !menuMobile.contains(event.target) && !btnMobile.contains(event.target)) {
+            menuMobile.classList.add('hidden');
+        }
+    });
 }
 
-// =========================================
-// 2. EFEK NAVBAR SAAT DI-SCROLL
-// =========================================
-// Membuat navbar memiliki bayangan (shadow) saat halaman digeser ke bawah
-const navbar = document.querySelector('nav');
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) {
-        navbar.classList.add('shadow-md', 'bg-white/95');
-        navbar.classList.remove('shadow-sm', 'bg-white/90');
-    } else {
-        navbar.classList.remove('shadow-md', 'bg-white/95');
-        navbar.classList.add('shadow-sm', 'bg-white/90');
-    }
-});
+// =========================================
+// 2. EFEK NAVBAR SAAT DI-SCROLL (ANTI-LAG)
+// =========================================
+// Menggunakan ID yang lebih spesifik agar tidak salah deteksi elemen
+const navbar = document.getElementById('navbar');
+
+if (navbar) {
+    // Tambahkan { passive: true } agar scroll di HP jadul tetap mulus
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+            // Cukup mainkan efek shadow dan blur agar Dark Mode tidak rusak
+            navbar.classList.add('shadow-md', 'backdrop-blur-xl');
+            navbar.classList.remove('shadow-sm', 'border-transparent');
+        } else {
+            navbar.classList.remove('shadow-md', 'backdrop-blur-xl');
+            navbar.classList.add('shadow-sm', 'border-transparent');
+        }
+    }, { passive: true });
+}
