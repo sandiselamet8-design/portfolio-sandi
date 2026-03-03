@@ -972,11 +972,17 @@
     <div id="cvModal" class="custom-modal fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-6 bg-slate-900/90" onclick="closeCV()">
         <button class="absolute top-4 right-4 text-white hover:text-red-500 bg-slate-800 rounded-full w-10 h-10 flex items-center justify-center text-xl transition z-50">&times;</button>
         <div class="modal-content w-full max-w-4xl h-[85vh] bg-white rounded-2xl overflow-hidden relative" onclick="event.stopPropagation()">
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 p-8 text-center -z-10">
-                <p class="mb-4">Dokumen CV sedang dimuat...</p>
-                <p class="text-sm">Jika tidak tampil, silakan gunakan tombol <b>Unduh CV</b>.</p>
-            </div>
-            <iframe src="assets/doc/CV_Sandi_Selamet.pdf" class="w-full h-full border-0 relative z-10 bg-transparent"></iframe>
+    <iframe 
+        src="assets/doc/CV_Sandi_Selamet.pdf#toolbar=0" 
+        class="w-full h-full border-0 bg-white">
+    </iframe>
+</div>
+            <div class="modal-content w-full max-w-4xl h-[85vh] bg-white rounded-2xl overflow-hidden relative" onclick="event.stopPropagation()">
+    <iframe 
+        src="assets/doc/CV_Sandi_Selamet.pdf#toolbar=0" 
+        class="w-full h-full border-0 bg-white">
+    </iframe>
+</div>
         </div>
     </div>
 
@@ -1181,6 +1187,7 @@ function closeCV() {
     
 
 </html>
+
 
 
 
