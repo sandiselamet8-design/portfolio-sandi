@@ -1005,13 +1005,33 @@
         btnLangDesk.addEventListener('click', toggleLanguage);
         btnLangMob.addEventListener('click', toggleLanguage);
 
-        // 2. LOGIKA LIHAT CV (MODAL PDF)
-        const cvModal = document.getElementById('cvModal');
-        function openCV() {
+       // 2. LOGIKA LIHAT CV (SMART: TAB BARU DI HP, MODAL DI LAPTOP)
+const cvModal = document.getElementById('cvModal');
+
+function openCV() {
+    // Deteksi jika pengguna memakai HP (layar kecil)
+    if (window.innerWidth <= 768) {
+        // Jika di HP, langsung buka file PDF di tab baru
+        window.open('assets/doc/CV_Sandi_Selamet.pdf', '_blank');
+    } else {
+        // Jika di Laptop, buka tampilan pop-up modal
+        if (cvModal) {
             cvModal.classList.remove('hidden');
             requestAnimationFrame(() => cvModal.classList.add('visible'));
             document.body.style.overflow = 'hidden';
         }
+    }
+}
+
+function closeCV() {
+    if (cvModal) {
+        cvModal.classList.remove('visible');
+        setTimeout(() => {
+            cvModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+}
         function closeCV() {
             cvModal.classList.remove('visible');
             setTimeout(() => { cvModal.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
@@ -1166,4 +1186,5 @@
     
 
 </html>
+
 
