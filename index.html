@@ -1011,24 +1011,10 @@ const cvModal = document.getElementById('cvModal');
 function openCV() {
     const cvModal = document.getElementById('cvModal');
     if (cvModal) {
-        // Ini akan membuka kotak modal baik di HP maupun Laptop
+        // Membuka kotak modal secara konsisten baik di HP maupun Laptop
         cvModal.classList.remove('hidden');
         requestAnimationFrame(() => cvModal.classList.add('visible'));
         document.body.style.overflow = 'hidden';
-    }
-}
-        // Jika di Laptop, buka tampilan pop-up modal
-        if (cvModal) {
-            cvModal.classList.remove('hidden');
-            requestAnimationFrame(() => cvModal.classList.add('visible'));
-            document.body.style.overflow = 'hidden';
-        }
-        // Jika di Laptop, buka tampilan pop-up modal
-        if (cvModal) {
-            cvModal.classList.remove('hidden');
-            requestAnimationFrame(() => cvModal.classList.add('visible'));
-            document.body.style.overflow = 'hidden';
-        }
     }
 }
 
@@ -1195,6 +1181,7 @@ function closeCV() {
     
 
 </html>
+
 
 
 
