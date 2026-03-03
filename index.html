@@ -1009,11 +1009,20 @@
 const cvModal = document.getElementById('cvModal');
 
 function openCV() {
-    // Deteksi jika pengguna memakai HP (layar kecil)
-    if (window.innerWidth <= 768) {
-        // Jika di HP, langsung buka file PDF di tab baru
-        window.open('assets/doc/CV_Sandi_Selamet.pdf', '_blank');
-    } else {
+    const cvModal = document.getElementById('cvModal');
+    if (cvModal) {
+        // Ini akan membuka kotak modal baik di HP maupun Laptop
+        cvModal.classList.remove('hidden');
+        requestAnimationFrame(() => cvModal.classList.add('visible'));
+        document.body.style.overflow = 'hidden';
+    }
+}
+        // Jika di Laptop, buka tampilan pop-up modal
+        if (cvModal) {
+            cvModal.classList.remove('hidden');
+            requestAnimationFrame(() => cvModal.classList.add('visible'));
+            document.body.style.overflow = 'hidden';
+        }
         // Jika di Laptop, buka tampilan pop-up modal
         if (cvModal) {
             cvModal.classList.remove('hidden');
@@ -1186,5 +1195,6 @@ function closeCV() {
     
 
 </html>
+
 
 
